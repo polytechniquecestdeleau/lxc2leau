@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LXC2LO — Ce qu'il manque à la Classe Prépa</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --navy:   #0d1b2e; --navy2: #122540; --blue: #1a3a5c; --mid: #1e4d7b;
+      --accent: #2e7fcf; --gold:  #c9a84c; --light: #e8f0fb; --white: #ffffff;
+      --text:   #d0dff5; --muted: #8aa5c4; --radius: 10px;
+      --shadow: 0 4px 32px rgba(0,0,0,.35);
+    }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--navy); color: var(--text); line-height: 1.7; }
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    img { max-width: 100%; }
+
+    .container { max-width: 960px; margin: 0 auto; padding: 0 24px; }
+    .tag { display: inline-block; background: var(--mid); color: var(--light); font-size: .75rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; padding: 4px 12px; border-radius: 20px; margin-bottom: 12px; }
+    .btn { display: inline-block; background: var(--accent); color: #fff; font-weight: 700; font-size: 1rem; padding: 14px 32px; border-radius: var(--radius); border: none; cursor: pointer; transition: background .2s, transform .1s; }
+    .btn:hover { background: #2469b0; text-decoration: none; transform: translateY(-1px); }
+    .btn-outline { background: transparent; border: 2px solid var(--accent); color: var(--accent); }
+    .btn-outline:hover { background: var(--accent); color: #fff; }
+
+    nav { position: sticky; top: 0; z-index: 100; background: rgba(13,27,46,.95); backdrop-filter: blur(10px); border-bottom: 1px solid rgba(46,127,207,.2); padding: 14px 0; }
+    .nav-inner { display: flex; align-items: center; justify-content: space-between; }
+    .logo { font-size: 1.4rem; font-weight: 900; letter-spacing: .04em; color: var(--white); }
+    .logo span { color: var(--accent); }
+    .nav-links { display: flex; gap: 24px; }
+    .nav-links a { color: var(--muted); font-size: .9rem; font-weight: 500; transition: color .2s; }
+    .nav-links a:hover { color: var(--white); text-decoration: none; }
+
+    #hero { padding: 90px 0 80px; background: linear-gradient(160deg, var(--navy) 0%, var(--navy2) 60%, var(--blue) 100%); border-bottom: 1px solid rgba(46,127,207,.15); position: relative; overflow: hidden; }
+    #hero::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 80% 60% at 60% 30%, rgba(46,127,207,.08) 0%, transparent 70%); }
+    .hero-content { position: relative; }
+    .places-badge { display: inline-flex; align-items: center; gap: 8px; background: rgba(201,168,76,.12); border: 1px solid rgba(201,168,76,.35); color: var(--gold); font-weight: 700; font-size: .85rem; padding: 6px 16px; border-radius: 20px; margin-bottom: 24px; }
+    .places-badge::before { content: '●'; font-size: .5rem; }
+    h1 { font-size: clamp(2rem, 5vw, 3.2rem); font-weight: 900; color: var(--white); line-height: 1.2; margin-bottom: 16px; }
+    h1 em { font-style: normal; color: var(--accent); }
+    .hero-sub { font-size: 1.15rem; color: var(--muted); max-width: 560px; margin-bottom: 12px; }
+    .hero-price { font-size: 1.4rem; font-weight: 800; color: var(--white); margin-bottom: 36px; }
+    .hero-price span { color: var(--accent); }
+    .hero-ctas { display: flex; gap: 16px; flex-wrap: wrap; }
+
+    .section-heading { text-align: center; margin-bottom: 56px; }
+    .section-heading h2 { font-size: clamp(1.5rem, 3.5vw, 2.2rem); font-weight: 800; color: var(--white); margin-bottom: 10px; }
+    .section-heading p { color: var(--muted); max-width: 560px; margin: 0 auto; }
+
+    #volets { padding: 90px 0; }
+    .volets-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; }
+    .volet-card { background: var(--navy2); border: 1px solid rgba(46,127,207,.15); border-radius: var(--radius); padding: 28px; transition: border-color .2s, transform .2s; position: relative; overflow: hidden; }
+    .volet-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: var(--accent); opacity: 0; transition: opacity .2s; }
+    .volet-card:hover { border-color: rgba(46,127,207,.4); transform: translateY(-3px); }
+    .volet-card:hover::before { opacity: 1; }
+    .volet-icon { font-size: 2rem; margin-bottom: 14px; }
+    .volet-schedule { font-size: .78rem; font-weight: 700; letter-spacing: .08em; color: var(--accent); text-transform: uppercase; margin-bottom: 8px; }
+    .volet-card h3 { font-size: 1.1rem; font-weight: 800; color: var(--white); margin-bottom: 10px; }
+    .volet-card p { font-size: .9rem; color: var(--muted); line-height: 1.65; }
+
+    #pricing { padding: 0 0 90px; }
+    .pricing-card { max-width: 480px; margin: 0 auto; background: var(--navy2); border: 2px solid var(--accent); border-radius: 16px; padding: 40px; text-align: center; box-shadow: var(--shadow); }
+    .pricing-card h2 { font-size: 1.4rem; font-weight: 800; color: var(--white); margin-bottom: 8px; }
+    .pricing-amount { font-size: 4rem; font-weight: 900; color: var(--white); line-height: 1.1; }
+    .pricing-amount sup { font-size: 1.5rem; vertical-align: top; margin-top: 10px; }
+    .pricing-period { color: var(--muted); font-size: .95rem; margin-bottom: 28px; }
+    .features-list { list-style: none; text-align: left; margin-bottom: 32px; }
+    .features-list li { padding: 8px 0; border-bottom: 1px solid rgba(46,127,207,.1); display: flex; gap: 10px; align-items: flex-start; font-size: .93rem; color: var(--text); }
+    .features-list li::before { content: '✓'; color: var(--accent); font-weight: 700; flex-shrink: 0; margin-top: 1px; }
+    .places-remaining { margin-top: 16px; font-size: .82rem; color: var(--gold); font-weight: 600; }
+
+    #candidature { padding: 0 0 90px; }
+    .tally-wrapper { max-width: 680px; margin: 0 auto; background: var(--navy2); border: 1px solid rgba(46,127,207,.2); border-radius: 16px; padding: 8px; overflow: hidden; }
+    .tally-wrapper iframe { border-radius: 12px; display: block; }
+
+    #testimonials { padding: 0 0 90px; overflow: hidden; }
+    .testimonials-track-wrapper { position: relative; width: 100%; overflow: hidden; -webkit-mask-image: linear-gradient(to right, transparent 0%, black 6%, black 94%, transparent 100%); mask-image: linear-gradient(to right, transparent 0%, black 6%, black 94%, transparent 100%); }
+    .testimonials-track { display: flex; gap: 20px; width: max-content; animation: scroll-left 55s linear infinite; }
+    .testimonials-track:hover { animation-play-state: paused; }
+    @keyframes scroll-left { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+    .testimonial-card { flex-shrink: 0; width: 320px; border-radius: 16px; overflow: hidden; box-shadow: 0 6px 28px rgba(0,0,0,.45); transition: transform .2s; }
+    .testimonial-card:hover { transform: scale(1.02); }
+    .testimonial-card img { width: 100%; height: auto; display: block; }
+
+    #philosophie { padding: 0 0 90px; }
+    .philo-box { max-width: 700px; margin: 0 auto; text-align: center; }
+    .philo-box blockquote { font-size: clamp(1.1rem, 2.5vw, 1.4rem); font-weight: 600; color: var(--white); line-height: 1.65; font-style: italic; position: relative; padding: 0 40px; }
+    .philo-box blockquote::before, .philo-box blockquote::after { content: '"'; font-size: 4rem; color: var(--accent); opacity: .3; position: absolute; line-height: 1; }
+    .philo-box blockquote::before { top: -10px; left: 0; }
+    .philo-box blockquote::after { bottom: -30px; right: 0; }
+
+    footer { background: var(--navy2); border-top: 1px solid rgba(46,127,207,.1); padding: 40px 0; text-align: center; color: var(--muted); font-size: .85rem; }
+    footer .logo { font-size: 1.1rem; display: inline-block; margin-bottom: 12px; }
+    footer p { margin-bottom: 6px; }
+
+    @media (max-width: 600px) { .nav-links { display: none; } #hero { padding: 60px 0 56px; } }
+    .fade-up { opacity: 0; transform: translateY(20px); transition: opacity .5s ease, transform .5s ease; }
+    .fade-up.visible { opacity: 1; transform: none; }
+  </style>
+</head>
+<body>
+
+<nav>
+  <div class="container nav-inner">
+    <div class="logo">LXC<span>2</span>LO</div>
+    <div class="nav-links">
+      <a href="#volets">Programme</a>
+      <a href="#pricing">Tarif</a>
+      <a href="#candidature">Candidater</a>
+    </div>
+  </div>
+</nav>
+
+<section id="hero">
+  <div class="container hero-content">
+    <div class="places-badge">60 places disponibles</div>
+    <h1>Ce qu'il manque<br>à la <em>Classe Prépa.</em></h1>
+    <p class="hero-sub">En ligne, le soir et le dimanche.<br>Un serveur Discord pensé pour aller au bout de tes capacités.</p>
+    <p class="hero-price"><span>49 €</span> / mois · Sans engagement</p>
+    <div class="hero-ctas">
+      <a href="#candidature" class="btn">Déposer ma candidature</a>
+      <a href="#volets" class="btn btn-outline">Voir le programme</a>
+    </div>
+  </div>
+</section>
+
+<section id="volets">
+  <div class="container">
+    <div class="section-heading fade-up">
+      <div class="tag">5 Volets</div>
+      <h2>Ce que tu trouveras ici</h2>
+      <p>Tout ce que la prépa t'a refusé — l'ouverture, le sens, la liberté et le mental.</p>
+    </div>
+    <div class="volets-grid">
+      <div class="volet-card fade-up">
+        <div class="volet-icon">🧠</div>
+        <div class="volet-schedule">Dimanche 15h–17h</div>
+        <h3>Méthode</h3>
+        <p>Ouverture hebdomadaire de sujets X ENS MINES CENTRALE. Discussions en groupe, retour sur questions classiques, méthode et approfondissement.</p>
+      </div>
+      <div class="volet-card fade-up">
+        <div class="volet-icon">🏭</div>
+        <div class="volet-schedule">Mardi 21h–22h</div>
+        <h3>Orientation</h3>
+        <p>Lien entre le cours de MP PC PSI PT et des sujets industriels actuels. Écoute en fond l'utilisation de la réduction de Jordan dans l'actualisation des pages Web.</p>
+      </div>
+      <div class="volet-card fade-up">
+        <div class="volet-icon">💡</div>
+        <div class="volet-schedule">Jeudi 21h–22h</div>
+        <h3>Liberté</h3>
+        <p>Économie, project finance sur une centrale osmotique, investissement financier pour atteindre une liberté rapidement.</p>
+      </div>
+      <div class="volet-card fade-up">
+        <div class="volet-icon">🧘</div>
+        <div class="volet-schedule">En continu</div>
+        <h3>Mental</h3>
+        <p>Un soutien psychologique quand tu en auras besoin. La prépa essore les esprits. Je suis là pour garder le cap.</p>
+      </div>
+      <div class="volet-card fade-up">
+        <div class="volet-icon">🔬</div>
+        <div class="volet-schedule">Projet</div>
+        <h3>TIPE & R&D</h3>
+        <p>Confronte ton intelligence au monde réel avec de jeunes scientifiques passionnés via le TIPE. Fini les TDs au tableau — on comprend des douleurs précises dans chaque industrie et on confronte une solution aux clients potentiels. 1h d'accompagnement par élève.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="pricing">
+  <div class="container">
+    <div class="section-heading fade-up">
+      <div class="tag">Accès Discord</div>
+      <h2>Un tarif unique, tout inclus</h2>
+    </div>
+    <div class="pricing-card fade-up">
+      <h2>Abonnement mensuel</h2>
+      <div class="pricing-amount"><sup>€</sup>49</div>
+      <div class="pricing-period">par mois · résiliable à tout moment</div>
+      <ul class="features-list">
+        <li>Accès complet au serveur Discord LXC2LO</li>
+        <li>Session Dimanche Méthode (15h–17h)</li>
+        <li>Session Mardi Orientation (21h–22h)</li>
+        <li>Session Jeudi Liberté (21h–22h)</li>
+        <li>Soutien Mental disponible en continu</li>
+        <li>Volet TIPE/R&D + 1h accompagnement</li>
+        <li>Accès archives & replays des sessions</li>
+      </ul>
+      <a href="#candidature" class="btn" style="width:100%;text-align:center;display:block;">
+        Déposer ma candidature
+      </a>
+      <p class="places-remaining">⚠ 60 places au total · Accès sur candidature</p>
+    </div>
+  </div>
+</section>
+
+<section id="candidature">
+  <div class="container">
+    <div class="section-heading fade-up">
+      <div class="tag">Candidature</div>
+      <h2>Rejoindre LXC2LO</h2>
+      <p>60 places. Accès sur dossier. Réponds aux questions ci-dessous — je reviens vers toi sous 48h.</p>
+    </div>
+
+    <div class="tally-wrapper fade-up">
+      <!-- Remplace TON_ID_FORMULAIRE par l'ID de ton form Tally -->
+      <iframe
+        data-tally-src="https://tally.so/embed/pbxGXB?alignLeft=1&hideTitle=1&dynamicHeight=1"
+        loading="lazy" width="100%" height="600" frameborder="0"
+        marginheight="0" marginwidth="0" title="Candidature LXC2LO"
+      ></iframe>
+    </div>
+
+    <p style="text-align:center;color:var(--muted);font-size:.8rem;margin-top:14px;">
+      Aucun paiement demandé à ce stade · Réponse sous 48h
+    </p>
+
+  </div>
+</section>
+
+
+<section id="testimonials">
+  <div class="container" style="margin-bottom:36px;">
+    <div class="section-heading fade-up">
+      <div class="tag">Ils en parlent</div>
+      <h2>Ce qu'ils disent</h2>
+    </div>
+  </div>
+  <div class="testimonials-track-wrapper">
+    <div class="testimonials-track">
+      <!-- Dépose tes 13 screenshots dans public/testimonials/ nommés t1.png … t13.png -->
+      <div class="testimonial-card"><img src="testimonials/t1.png"  alt="Avis Milieu" /></div>
+      <div class="testimonial-card"><img src="testimonials/t2.png"  alt="Avis Stéphane" /></div>
+      <div class="testimonial-card"><img src="testimonials/t3.png"  alt="Avis Yann" /></div>
+      <div class="testimonial-card"><img src="testimonials/t4.png"  alt="Avis Leonard" /></div>
+      <div class="testimonial-card"><img src="testimonials/t5.png"  alt="Avis Antoine" /></div>
+      <div class="testimonial-card"><img src="testimonials/t6.png"  alt="Avis Katrine" /></div>
+      <div class="testimonial-card"><img src="testimonials/t7.png"  alt="Avis Anne-Sophie" /></div>
+      <div class="testimonial-card"><img src="testimonials/t8.png"  alt="Avis André" /></div>
+      <div class="testimonial-card"><img src="testimonials/t9.png"  alt="Avis Alba" /></div>
+      <div class="testimonial-card"><img src="testimonials/t10.png" alt="Avis Margot" /></div>
+      <div class="testimonial-card"><img src="testimonials/t11.png" alt="WhatsApp Flore" /></div>
+      <div class="testimonial-card"><img src="testimonials/t12.png" alt="WhatsApp Vincent" /></div>
+      <div class="testimonial-card"><img src="testimonials/t13.png" alt="WhatsApp Amaury" /></div>
+      <!-- Duplication pour boucle infinie -->
+      <div class="testimonial-card"><img src="testimonials/t1.png"  alt="" /></div>
+      <div class="testimonial-card"><img src="testimonials/t2.png"  alt="" /></div>
+      <div class="testimonial-card"><img src="testimonials/t3.png"  alt="" /></div>
+      <div class="testimonial-card"><img src="testimonials/t4.png"  alt="" /></div>
+      <div class="testimonial-card"><img src="testimonials/t5.png"  alt="" /></div>
+      <div class="testimonial-card"><img src="testimonials/t6.png"  alt="" /></div>
+      <div class="testimonial-card"><img src="testimonials/t7.png"  alt="" /></div>
+      <div class="testimonial-card"><img src="testimonials/t8.png"  alt="" /></div>
+      <div class="testimonial-card"><img src="testimonials/t9.png"  alt="" /></div>
+      <div class="testimonial-card"><img src="testimonials/t10.png" alt="" /></div>
+      <div class="testimonial-card"><img src="testimonials/t11.png" alt="" /></div>
+      <div class="testimonial-card"><img src="testimonials/t12.png" alt="" /></div>
+      <div class="testimonial-card"><img src="testimonials/t13.png" alt="" /></div>
+    </div>
+  </div>
+</section>
+
+<section id="philosophie">
+  <div class="container">
+    <div class="philo-box fade-up">
+      <div class="tag" style="margin-bottom:32px;">Manifeste</div>
+      <blockquote>
+        Mon but, c'est de t'emmener au bout de tes capacités et de te rendre libre par l'application de tes connaissances dans le monde réel. Émancipe-toi.
+      </blockquote>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <div class="logo">LXC<span style="color:var(--accent)">2</span>LO</div>
+    <p>Ce qu'il manque à la Classe Prépa.</p>
+    <p style="margin-top:16px;font-size:.78rem;">© 2026 LXC2LO · Tous droits réservés</p>
+    <p style="margin-top:6px;font-size:.78rem;">
+      <a href="mailto:contact@lxc2lo.fr" style="color:var(--muted)">contact@lxc2lo.fr</a>
+    </p>
+  </div>
+</footer>
+
+<script>
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+  }, { threshold: 0.1 });
+  document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+
+  var d = document, w = "https://tally.so/widgets/embed.js";
+  var v = function() {
+    if (typeof Tally !== 'undefined') Tally.loadEmbeds();
+    else d.querySelectorAll("iframe[data-tally-src]:not([src])").forEach(function(e) { e.src = e.dataset.tallySrc; });
+  };
+  if (typeof Tally !== 'undefined') { v(); }
+  else if (!d.getElementById("tally-js")) {
+    var s = d.createElement("script"); s.src = w; s.id = "tally-js"; s.onload = v; d.body.appendChild(s);
+  }
+
+</script>
+</body>
+</html>
